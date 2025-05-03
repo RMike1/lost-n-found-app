@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\User;
+use App\Models\Village;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,11 +14,28 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
 
+        $this->call([
+            LocationSeeder::class,
+            CategorySeeder::class,
+        ]);
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'jon',
+            'email' => 'jon@gmail.com',
+            'password' => 'password',
+            'village_id' => Village::inRandomOrder()->first()->id,
+        ]);
+        User::factory()->create([
+            'name' => 'snow',
+            'email' => 'snow@gmail.com',
+            'password' => 'password',
+            'village_id' => Village::inRandomOrder()->first()->id,
+        ]);
+        User::factory()->create([
+            'name' => 'chris',
+            'email' => 'chris@gmail.com',
+            'password' => 'password',
+            'village_id' => Village::inRandomOrder()->first()->id,
         ]);
     }
 }
