@@ -14,24 +14,30 @@ const mainNavItems: NavItem[] = [
         href: '/dashboard',
         icon: LayoutGrid,
     },
-];
-
-const footerNavItems: NavItem[] = [
     {
-        title: 'Github Repo',
-        href: 'https://github.com/laravel/vue-starter-kit',
+        title: 'Category',
+        href: '/category',
         icon: Folder,
     },
     {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
+        title: 'Items',
+        href: '/items',
+        icon: Folder,
+    },
+    {
+        title: 'Users',
+        href: '/users',
+        icon: Folder,
     },
 ];
+
+const footerNavItems: NavItem[] = [
+];
+
 </script>
 
 <template>
-    <Sidebar collapsible="icon" variant="inset">
+    <Sidebar collapsible="icon" variant="floating">
         <SidebarHeader>
             <SidebarMenu>
                 <SidebarMenuItem>
