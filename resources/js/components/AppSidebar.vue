@@ -15,11 +15,6 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Category',
-        href: '/category',
-        icon: Folder,
-    },
-    {
         title: 'Items',
         href: '/items',
         icon: Folder,
