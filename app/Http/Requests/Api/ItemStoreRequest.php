@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Api;
 
-use App\Enums\Api\PostTypeEnum;
+use App\Enums\PostTypeEnum;
 use App\Models\Category;
 use App\Models\Village;
 use Illuminate\Foundation\Http\FormRequest;

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\Api\PostTypeEnum;
+use App\Enums\PostTypeEnum;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;

@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\Api\PostTypeEnum;
+use App\Enums\PostTypeEnum;
 use App\Models\Village;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

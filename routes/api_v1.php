@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Route;
 // =========================================Auth Routes=============================================
 
 Route::controller(AuthController::class)->group(function () {
-    Route::post('/login', 'login')->name('login');
-    Route::post('/register', 'register')->name('register');
-    Route::post('/forgot-password', 'forgotPassword')->name('password.email');
-    Route::post('/reset-password', 'resetPassword')->name('password.reset');
-    Route::post('/logout', 'logout')->middleware('auth:sanctum')->name('logout');
+    Route::post('/login', 'login')->name('api.login');
+    Route::post('/register', 'register')->name('api.register');
+    Route::post('/forgot-password', 'forgotPassword')->name('api.password.email');
+    Route::post('/reset-password', 'resetPassword')->name('api.password.reset');
+    Route::post('/logout', 'logout')->middleware('auth:sanctum')->name('api.logout');
 });
 
 // ========================================User Locotions Routes========================================
