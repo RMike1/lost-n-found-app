@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers\Web;
 
+use Inertia\Inertia;
+use Illuminate\Http\Request;
+use App\Models\Item;
 use App\Http\Controllers\Controller;
 use App\Services\Web\Admin\DashboardService;
-use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
     public function __construct(protected DashboardService $dashboardService) {}
 
-    public function __invoke()
+    public function __invoke(Request $req)
     {
-        $dashboardService = $this->dashboardService->dashboard();
-
-        return Inertia::render('Dashboard')->with([
-            'lost_items' => $dashboardService[0],
-            'found_items' => $dashboardService[1],
-        ]);
+        
+        return Inertia::render('Dashboard',
+          $this->dashboardService->dashboard($req)
+        );
     }
 }

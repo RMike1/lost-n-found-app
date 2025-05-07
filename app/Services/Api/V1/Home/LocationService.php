@@ -52,7 +52,7 @@ class LocationService
             ->join('cells', 'villages.cell_id', '=', 'cells.id')
             ->join('sectors', 'cells.sector_id', '=', 'sectors.id')
             ->join('districts', 'sectors.district_id', '=', 'districts.id')
-            ->where('items.active', true)
+            ->where('items.is_approved', true)
             ->select([
                 'villages.name as village_name',
                 'villages.latitude',

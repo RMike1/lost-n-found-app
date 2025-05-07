@@ -18,15 +18,13 @@ class ItemFactory extends Factory
      */
     public function definition(): array
     {
-        $isResolved = fake()->boolean(5);
-
         return [
             'title' => fake()->sentence(1),
             'description' => fake()->paragraph(3),
             'post_type' => fake()->randomElement(PostTypeEnum::cases()),
             'village_id' => Village::inRandomOrder()->first()?->id,
-            'resolved' => $isResolved,
-            'active' => ! $isResolved,
+            'is_resolved' => fake()->boolean(5),
+            'is_approved' => fake()->boolean(5),
         ];
     }
 }

@@ -26,7 +26,7 @@ it('allows a user to view nearby locations', function () {
         'category_id' => $category->id,
         'user_id' => User::factory()->create(['email' => fake()->unique()->safeEmail(), 'village_id' => $nearbyVillage->id])->id,
         'post_type' => 'lost',
-        'active' => true,
+        'is_approved' => true,
     ]);
     $this->actingAs($this->user)->getJson(route('user.near-by-locations'))
         ->assertOk()

@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
-import { Head } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import Button from '@/components/ui/button/Button.vue';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CalendarDate, DateFormatter, getLocalTimeZone } from '@internationalized/date'
 import DateRangePicker from '@/components/DateRangePicker.vue'
 // import Overview from '@/components/Overview.vue'
 
@@ -15,10 +16,27 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const props = defineProps({
-    'lost_items': Number,
-    'found_items': Number
-});
+const props = defineProps<{
+    lost_items: { count: number; change: number };
+    found_items: { count: number; change: number };
+    matches: { count: number; change: number };
+    unapproved: { count: number; change: number };
+    date_range: { startDate: string, endDate: string }
+}>();
+
+function handleDateRangeUpdate(dateRange: { start: CalendarDate; end: CalendarDate }) {
+  const start = dateRange.start.toString()
+  const end = dateRange.end.toString()    
+
+  router.get('/dashboard', {
+    start_date: start,
+    end_date: end
+  }, {
+    preserveState: true,
+    preserveScroll: true,
+    replace: true
+  })
+}
 
 </script>
 
@@ -33,8 +51,8 @@ const props = defineProps({
                 class="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 dark:border-sidebar-border md:min-h-min">
                 <div class="flex-1 space-y-4 p-8 pt-6">
                     <div class="flex flex-col sm:flex-row items-center justify-end space-y-2 space-x-2 sm:space-y-0">
-                            <DateRangePicker/>
-                            <Button>View</Button>
+                            <DateRangePicker @update="handleDateRangeUpdate" :date_range="date_range"/>
+                            <Button>View</Button>   
                     </div>
 
                     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -51,10 +69,10 @@ const props = defineProps({
                             </CardHeader>
                             <CardContent>
                                 <div class="text-2xl font-bold">
-                                    {{ props.lost_items }} items
+                                    {{ props.lost_items.count }} items
                                 </div>
                                 <p class="text-xs text-muted-foreground">
-                                    +20.1% from last month
+                                    {{ props.lost_items.change }} from last month
                                 </p>
                             </CardContent>
                         </Card>
@@ -71,10 +89,10 @@ const props = defineProps({
                             </CardHeader>
                             <CardContent>
                                 <div class="text-2xl font-bold">
-                                    {{ props.found_items }} items
+                                    {{ props.found_items.count }} items
                                 </div>
                                 <p class="text-xs text-muted-foreground">
-                                    +180.1% from last month
+                                    {{ props.found_items.change }} from last month
                                 </p>
                             </CardContent>
                         </Card>
@@ -93,10 +111,10 @@ const props = defineProps({
                             </CardHeader>
                             <CardContent>
                                 <div class="text-2xl font-bold">
-                                    +12,234
+                                    {{ props.matches.count }}
                                 </div>
                                 <p class="text-xs text-muted-foreground">
-                                    +19% from last month
+                                    {{ props.matches.change }} from last month
                                 </p>
                             </CardContent>
                         </Card>
@@ -113,10 +131,10 @@ const props = defineProps({
                             </CardHeader>
                             <CardContent>
                                 <div class="text-2xl font-bold">
-                                    88 pending
+                                    {{ props.unapproved.count }} pending
                                 </div>
                                 <p class="text-xs text-muted-foreground">
-                                    +201 since last hour
+                                    {{ props.unapproved.change }} since last month
                                 </p>
                             </CardContent>
                         </Card>

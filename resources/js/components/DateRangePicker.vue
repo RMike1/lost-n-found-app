@@ -4,20 +4,36 @@ import { cn } from '@/lib/utils'
 import  Button  from '@/components/ui/button/Button.vue'
 import { RangeCalendar }  from '@/components/ui/range-calendar'
 import {Popover,PopoverContent,PopoverTrigger} from '@/components/ui/popover'
-import { CalendarDate, DateFormatter, getLocalTimeZone } from '@internationalized/date'
+import { CalendarDate, DateFormatter, getLocalTimeZone, now } from '@internationalized/date'
 import { Calendar as CalendarIcon } from 'lucide-vue-next'
-import { ref } from 'vue'
+import { ref, watch  } from 'vue'
+
+const props = defineProps<{
+    date_range: Object
+}>();
+
 
 const df = new DateFormatter('en-US', {
   dateStyle: 'medium',
 })
 
-const calendarDate = new CalendarDate(2025, 5, 5)
+const today = now(getLocalTimeZone())
+
+const startOfMonth = new CalendarDate(today.year, today.month, 1)
+const endOfMonth = startOfMonth.add({ months: 1 }).subtract({ days: 1 })
 
 const value = ref({
-  start: calendarDate,
-  end: calendarDate.add({ days: 36 }),
+  start: startOfMonth,
+  end: endOfMonth,
 }) as Ref<DateRange>
+
+const emit = defineEmits<{
+  (e: 'update', value: DateRange): void
+}>()
+
+watch(value, (newValue) => {
+  emit('update', newValue)
+})
 
 </script>
 

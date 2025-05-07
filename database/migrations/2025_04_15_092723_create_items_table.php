@@ -20,8 +20,8 @@ return new class extends Migration
             $table->foreignUlid('village_id')->nullable()->constrained('villages')->cascadeOnDelete();
             $table->foreignUlid('category_id')->constrained('categories')->cascadeOnDelete();
             $table->foreignIdFor(User::class)->constrained('users')->cascadeOnDelete();
-            $table->boolean('resolved')->default(false);
-            $table->boolean('active')->default(true);
+            $table->boolean('is_resolved')->default(false);
+            $table->boolean('is_approved')->default(false);
             $table->timestamps();
         });
     }
