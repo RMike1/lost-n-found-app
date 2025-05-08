@@ -12,9 +12,15 @@ Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
 
-Route::get('dashboard', DashboardController::class)->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::prefix('items')->controller(ItemController::class)->middleware(['auth', 'verified'])->group(function () {
-    Route::get('lost', 'getLostItems')->name('items.lost');
-    Route::get('found', 'getFoundItems')->name('items.found');
+
+Route::middleware(['auth','verified','admin'])->group(function(){
+    Route::get('dashboard', DashboardController::class)->name('dashboard');
+    
+    Route::prefix('items')->controller(ItemController::class)->group(function () {
+        Route::get('items', 'getItems')->name('items.found');
+        // Route::get('lost', 'getLostItems')->name('items.lost');
+        // Route::get('found', 'getFoundItems')->name('items.found');
+    });
 });
+
