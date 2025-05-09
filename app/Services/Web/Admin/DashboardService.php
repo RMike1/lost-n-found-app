@@ -2,15 +2,14 @@
 
 namespace App\Services\Web\Admin;
 
-use App\Models\Item;
 use App\Enums\PostTypeEnum;
+use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Number;
 
 class DashboardService
 {
-
     public function dashboard(Request $req): array
     {
         $start = $req->query('start_date');
@@ -58,32 +57,32 @@ class DashboardService
             ->whereBetween('updated_at', [$lastMonthStart, $lastMonthEnd])
             ->count();
 
-        $percentage = fn($current, $previous) => $previous == 0
+        $percentage = fn ($current, $previous) => $previous === 0
             ? ($current > 0 ? 100 : 0) : round((($current - $previous) / $previous) * 100, 1);
-        
+
         $range = [
-            'startDate'=>$startDate, 
-            'endDate'=>$endDate
+            'startDate' => $startDate,
+            'endDate' => $endDate,
         ];
 
         return [
             'lost_items' => [
                 'count' => $lostItems,
-                'change' => ($lostItems > $lastMonthLost ? '+' : '') . Number::percentage($percentage($lostItems, $lastMonthLost)),
+                'change' => ($lostItems > $lastMonthLost ? '+' : '').Number::percentage($percentage($lostItems, $lastMonthLost)),
             ],
             'found_items' => [
                 'count' => $foundItems,
-                'change' => ($foundItems > $lastMonthFound ? '+' : '') . Number::percentage($percentage($foundItems, $lastMonthFound)),
+                'change' => ($foundItems > $lastMonthFound ? '+' : '').Number::percentage($percentage($foundItems, $lastMonthFound)),
             ],
             'matches' => [
                 'count' => $matches,
-                'change' => ($matches > $lastMonthMatches ? '+' : '') . Number::percentage($percentage($matches, $lastMonthMatches)),
+                'change' => ($matches > $lastMonthMatches ? '+' : '').Number::percentage($percentage($matches, $lastMonthMatches)),
             ],
             'unapproved' => [
                 'count' => $unapproved,
-                'change' => ($unapproved > $lastMonthUnapproved ? '+' : '') . Number::percentage($percentage($unapproved, $lastMonthUnapproved)),
+                'change' => ($unapproved > $lastMonthUnapproved ? '+' : '').Number::percentage($percentage($unapproved, $lastMonthUnapproved)),
             ],
-            'date_range'=>$range
+            'date_range' => $range,
         ];
     }
 }

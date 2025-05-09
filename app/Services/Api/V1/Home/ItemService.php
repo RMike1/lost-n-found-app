@@ -8,15 +8,16 @@ use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class ItemService
 {
-    public function index(Request $req): array
+    public function index(Request $req)
     {
         return [
             $items = Item::query()
-                ->where('active', true)
+                ->where('is_approved', true)
                 ->with(['category', 'user', 'village', 'cell', 'sector', 'district', 'itemImages' => fn ($query) => $query->primaryImage()->take(1)])
                 ->getFiltered($req)
                 ->latest()
@@ -112,5 +113,30 @@ class ItemService
             $items->toResourceCollection(),
             $items->count(),
         ];
+    }
+
+    public function markItemAsResolved(string $item): bool
+    {
+        $item = Item::find($item);
+        throw_unless($item, AppException::recordNotFound());
+        throw_if(
+            ! Gate::inspect('update', $item)->allowed(),
+            AppException::forbidden('Not allowed to modify this item')
+        );
+        $isResolved = $item->is_resolved;
+        $item->update(['is_resolved' => ! $isResolved]);
+
+        return $item->getChanges()['is_resolved'];
+    }
+
+    public function itemDelete(string $item): void
+    {
+        $item = Item::find($item);
+        throw_unless($item, AppException::recordNotFound());
+        throw_if(
+            ! Gate::inspect('delete', $item)->allowed(),
+            AppException::forbidden('Not allowed to delete this item')
+        );
+        $item->delete();
     }
 }

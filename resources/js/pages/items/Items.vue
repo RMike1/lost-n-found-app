@@ -1,19 +1,32 @@
 <script setup lang="ts">
-import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
+// import { Button } from '@/components/ui/button'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
+import { Separator } from '@/components/ui/separator'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs'
 
-// import DeleteUser from '@/components/DeleteUser.vue';
-import HeadingSmall from '@/components/HeadingSmall.vue';
-import InputError from '@/components/InputError.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input'
+import { Search } from 'lucide-vue-next'
+
+// import PlusCircledIcon from '~icons/radix-icons/plus-circled'
+import ItemsList from '@/components/ItemsList.vue'
+import ItemEmptyPlaceholder from '@/components/ItemPlaceholder.vue';
+
+import Sidebar from '@/components/Sidebar.vue'
+import { listenNowAlbums } from '@/composables/data/items'
+
 import AppLayout from '@/layouts/AppLayout.vue';
-import ItemsLayout from '@/layouts/items/Layout.vue';
-import { type BreadcrumbItem, type SharedData, type User } from '@/types';
+import { type BreadcrumbItem} from '@/types';
+
 
 interface Props {
     mustVerifyEmail: boolean;
     status?: string;
+    categories : Array;
 }
 
 defineProps<Props>();
@@ -23,84 +36,115 @@ const breadcrumbs: BreadcrumbItem[] = [
         title: 'Items',
         href: '/items',
     },
+    {
+        title: 'Items Details',
+        href: '/items',
+    },
 ];
 
-const page = usePage<SharedData>();
-const user = page.props.auth.user as User;
 
-const form = useForm({
-    name: user.name,
-    email: user.email,
-});
+// const page = usePage<SharedData>();
+// const user = page.props.auth.user as User;
 
-const submit = () => {
-    form.patch(route('profile.update'), {
-        preserveScroll: true,
-    });
-};
+// const form = useForm({
+//     name: user.name,
+//     email: user.email,
+// });
+
+// const submit = () => {
+//     form.patch(route('profile.update'), {
+//         preserveScroll: true,
+//     });
+// };
 </script>
 
 <template>
-    <AppLayout :breadcrumbs="breadcrumbs">
-        <Head title="Items" />
-
-        <ItemsLayout>
-            <div class="flex flex-col space-y-6">
-                <HeadingSmall title="Lost Items" description="Remember to review before approve" />
-
-                <form @submit.prevent="submit" class="space-y-6">
-                    <div class="grid gap-2">
-                        <Label for="name">Name</Label>
-                        <Input id="name" class="mt-1 block w-full" v-model="form.name" required autocomplete="name" placeholder="Full name" />
-                        <InputError class="mt-2" :message="form.errors.name" />
+  <AppLayout :breadcrumbs="breadcrumbs">
+    <Head title="Lost-Items" />
+    <!-- <div class="md:hidden">
+      <VPImage
+        alt="Music"
+        width="1280"
+        height="1214"
+        class="block"
+        :image="{
+          dark: '/examples/music-dark.png',
+          light: '/examples/music-light.png',
+        }"
+      />
+    </div> -->
+    <!-- <div class="hidden md:block"> -->
+      <!-- <Menu /> -->
+      <div class="border-t">
+        <div class="bg-background">
+          <div class="grid lg:grid-cols-5">
+            <Sidebar :categories="categories" class="hidden lg:block" />
+            <div class="col-span-3 lg:col-span-4 lg:border-l">
+              <div class="h-full px-4 py-6 lg:px-8">
+                <Tabs default-value="all" class="h-full space-y-6">
+                  <div class="space-between flex items-center">
+                    <TabsList>
+                      <TabsTrigger value="all" class="relative cursor-pointer"> All </TabsTrigger>
+                      <TabsTrigger value="lost" class="cursor-pointer" > Lost </TabsTrigger>
+                      <TabsTrigger value="found" class="cursor-pointer"> Found </TabsTrigger>
+                    </TabsList>
+                    <div class="ml-auto mr-4 relative">
+                      <Input id="search" type="text" placeholder="Search..." class="pl-10" />
+                      <span class="absolute start-0 inset-y-0 flex items-center justify-center px-2">
+                        <Search class="size-6 text-muted-foreground" />
+                      </span>
                     </div>
-
-                    <div class="grid gap-2">
-                        <Label for="email">Email address</Label>
-                        <Input
-                            id="email"
-                            type="email"
-                            class="mt-1 block w-full"
-                            v-model="form.email"
-                            required
-                            autocomplete="username"
-                            placeholder="Email address"
-                        />
-                        <InputError class="mt-2" :message="form.errors.email" />
-                    </div>
-
-                    <div v-if="mustVerifyEmail && !user.email_verified_at">
-                        <p class="-mt-4 text-sm text-muted-foreground">
-                            Your email address is unverified.
-                            <Link
-                                :href="route('verification.send')"
-                                method="post"
-                                as="button"
-                                class="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
-                            >
-                                Click here to resend the verification email.
-                            </Link>
+                  </div>
+                  <TabsContent value="all" class="border-none p-0 outline-none">
+                    <div class="flex items-center justify-between">
+                      <div class="space-y-1">
+                        <h2 class="text-2xl font-semibold tracking-tight">All Items</h2>
+                        <p class="text-sm text-muted-foreground">
+                          Including Lost and Found Items.
                         </p>
-
-                        <div v-if="status === 'verification-link-sent'" class="mt-2 text-sm font-medium text-green-600">
-                            A new verification link has been sent to your email address.
+                      </div>
+                    </div>
+                    <Separator class="my-4" />
+                    <div class="relative">
+                      <ScrollArea>
+                        <div class="grid grid-cols-2 lg:grid-cols-3 gap-2 space-x-3">
+                          <ItemsList
+                            v-for="album in listenNowAlbums"
+                            :key="album.name"
+                            :album="album"
+                            class="w-[250px]"
+                            aspect-ratio="square"
+                            :width="250"
+                            :height="330"
+                          />
                         </div>
+                        <ScrollBar orientation="vertical" />
+                      </ScrollArea>
                     </div>
-
-                    <div class="flex items-center gap-4">
-                        <Button :disabled="form.processing">Save</Button>
-
-                        <Transition
-                            enter-active-class="transition ease-in-out"
-                            enter-from-class="opacity-0"
-                            leave-active-class="transition ease-in-out"
-                            leave-to-class="opacity-0"
-                        >
-                            <p v-show="form.recentlySuccessful" class="text-sm text-neutral-600">Saved.</p>
-                        </Transition>
+                  </TabsContent>
+                  <TabsContent
+                    value="lost"
+                    class="h-full flex-col border-none p-0 data-[state=active]:flex"
+                  >
+                    <div class="flex items-center justify-between">
+                      <div class="space-y-1">
+                        <h2 class="text-2xl font-semibold tracking-tight">
+                          New Episodes
+                        </h2>
+                        <p class="text-sm text-muted-foreground">
+                          Your favorite podcasts. Updated daily.
+                        </p>
+                      </div>
                     </div>
-                </form>
+                    <Separator class="my-4" />
+                    <ItemEmptyPlaceholder />
+                  </TabsContent>
+                </Tabs>
+              </div>
             </div>
-        </ItemsLayout>
-    </AppLayout>
+          </div>
+        </div>
+      </div>
+    <!-- </div> -->
+  </AppLayout>
 </template>

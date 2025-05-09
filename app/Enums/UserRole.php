@@ -18,6 +18,7 @@ enum UserRole: string
     {
         return $this === self::MODERATOR || $this === self::SUPER_ADMIN;
     }
+
     public function isSuperAdmin(): bool
     {
         return $this === self::SUPER_ADMIN;

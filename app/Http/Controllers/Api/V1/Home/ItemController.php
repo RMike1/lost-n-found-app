@@ -19,12 +19,12 @@ class ItemController extends Controller
         return response()->json([
             'items_counts' => $data[1],
             'items' => $data[0],
-        ], 200);
+        ])->setStatusCode(200);
     }
 
     public function store(ItemStoreRequest $request): JsonResponse
     {
-        return response()->json([$this->itemService->store($request)], 201);
+        return response()->json([$this->itemService->store($request)])->setStatusCode(201);
     }
 
     public function show(string $id): JsonResponse
@@ -51,7 +51,7 @@ class ItemController extends Controller
         return response()->json([
             'items_counts' => $data[1],
             'favorites_items' => $data[0],
-        ], 200);
+        ])->setStatusCode(200);
     }
 
     public function getUserItems(): JsonResponse
@@ -61,6 +61,25 @@ class ItemController extends Controller
         return response()->json([
             'items_counts' => $data[1],
             'user_items' => $data[0],
-        ], 200);
+        ])->setStatusCode(200);
+    }
+
+    public function markItemAsResolved(string $item): JsonResponse
+    {
+        $data = $this->itemService->markItemAsResolved($item);
+
+        return response()->json([
+            'message' => $data ? 'item marked as resolved!' :
+                                'item marked as unresolved!',
+        ])->setStatusCode(200);
+    }
+
+    public function itemDelete(string $item): JsonResponse
+    {
+        $this->itemService->itemDelete($item);
+
+        return response()->json([
+            'message' => 'item deleted successfully!',
+        ])->setStatusCode(200);
     }
 }

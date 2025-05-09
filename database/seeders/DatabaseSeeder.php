@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\User;
 use App\Enums\UserRole;
+use App\Models\User;
 use App\Models\Village;
 use Illuminate\Database\Seeder;
 
@@ -19,7 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             LocationSeeder::class,
         ]);
-        
+
         User::factory()->create([
             'name' => 'jon',
             'email' => 'jon@gmail.com',

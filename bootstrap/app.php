@@ -1,18 +1,21 @@
 <?php
 
-use Illuminate\Http\Request;
 use App\Enums\Api\ApiException;
 use App\Exceptions\AppException;
-use Illuminate\Foundation\Application;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\HandleAppearance;
-use Illuminate\Auth\AuthenticationException;
 use App\Http\Middleware\HandleInertiaRequests;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\Access\AuthorizationException;
+// use Illuminate\Auth\Access\AuthenticationException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -24,7 +27,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
         $middleware->alias([
-            'admin'=>AdminMiddleware::class
+            'admin' => AdminMiddleware::class,
         ]);
 
         $middleware->web(append: [
@@ -47,7 +50,9 @@ return Application::configure(basePath: dirname(__DIR__))
                 $exception = match (true) {
                     $e instanceof ValidationException => ApiException::VALIDATION,
                     $e instanceof ModelNotFoundException => ApiException::NOT_FOUND,
+                    $e instanceof AuthorizationException => ApiException::FORBIDDEN,
                     $e instanceof AuthenticationException => ApiException::AUTH_FAILED,
+                    $e instanceof ThrottleRequestsException => ApiException::THROTTLE,
                     default => ApiException::SERVER_ERROR
                 };
 
@@ -56,7 +61,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 if ($e instanceof ValidationException) {
                     $response['errors'] = $e->errors();
                 } else {
-                    $response['error'] = $e->getMessage() ?: $response['message'];
+                    $response['message'] = $e->getMessage() ?: $response['message'];
                 }
 
                 return response()->json($response, $response['status']);

@@ -3,14 +3,22 @@
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
+use App\Services\Web\Admin\ItemService;
 use Inertia\Inertia;
 
 class ItemController extends Controller
 {
+    public function __construct(private ItemService $itemService) {}
+
     public function getItems()
     {
-        return Inertia::render('items/Items');
+        $data = $this->itemService->item();
+
+        return Inertia::render('items/Items', [
+            'categories' => $data,
+        ]);
     }
+
     public function getLostItems()
     {
         return Inertia::render('items/Lost-Items');

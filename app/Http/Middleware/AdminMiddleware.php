@@ -16,9 +16,10 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!Auth::user()->role->isAdmin()){
+        if (! Auth::user()->role->isAdmin()) {
             return redirect()->route('home')->with('error', 'You are not authorized to access this page.');
         }
+
         return $next($request);
     }
 }

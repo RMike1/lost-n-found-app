@@ -18,17 +18,13 @@ class ChatService
     {
         $user = Auth::id();
         $receiverExists = User::whereKey($receiver)->exists();
-
-        throw_if($user === $receiver, AppException::forbidden('You cannot message yourself'));
         throw_unless($receiverExists, AppException::recordNotFound('Receiver user does not exist'));
 
         $itemModel = Item::find($item);
         throw_if(! $itemModel, AppException::recordNotFound('Item not found'));
         $itemOwner = $itemModel->user_id;
 
-        throw_if($user !== $itemOwner && $receiver !== $itemOwner, AppException::forbidden('Only item owner can be messaged'));
-
-        return DB::transaction(function () use ($receiver, $item, $user) {
+        return DB::transaction(function () use ($receiver, $item, $user, $itemModel) {
             $conversation = Conversation::query()
                 ->whereConversationExist($receiver, $item)
                 ->first() ?? Conversation::create([
@@ -36,7 +32,9 @@ class ChatService
                     'sender_id' => $user,
                     'receiver_id' => $receiver,
                 ]);
-            Gate::authorize('view', $conversation);
+
+            throw_if(! Gate::inspect('canMessage', [$conversation, $itemModel])->allowed(),
+                AppException::forbidden('Unauthorized for this chat'));
             if ($conversation->exists) {
                 defer(function () use ($conversation, $user) {
                     Message::where('conversation_id', $conversation->id)
@@ -63,11 +61,13 @@ class ChatService
     public function sendMessage(array $data)
     {
         return DB::transaction(function () use ($data) {
-            $user = Auth::id();
             $conversation = Conversation::find($data['conversation_id']);
-            throw_unless($conversation->sender_id === $user || $conversation->receiver_id === $user, AppException::forbidden('You can not send messages in this conversation'));
-            Gate::authorize('sendMessage', $conversation);
+            throw_if(! $conversation, AppException::recordNotFound('this chat does not exist'));
+            $itemModel = Item::find($conversation->item_id);
+            throw_if(! $itemModel, AppException::recordNotFound());
 
+            throw_if(! Gate::inspect('canMessage', [$conversation, $itemModel])->allowed(),
+                AppException::forbidden('You can\'t send messages in this conversation'));
             $message = Message::create([
                 'message' => $data['message'],
                 'sender_id' => Auth::id(),

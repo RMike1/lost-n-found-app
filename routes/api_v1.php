@@ -41,6 +41,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/items/{item}/favorite', 'toggleFavorite')->name('items.favorite');
         Route::get('/favorites', 'getFavorites')->name('favorites');
         Route::get('/user/items', 'getUserItems')->name('items.user');
+        Route::put('/items/{item}/mark-as-resolved', 'markItemAsResolved')->name('items.mark-as-resolved');
+        Route::delete('/items/{item}/delete', 'itemDelete')->name('items.delete');
     });
 
     // ========================================Category Routes============================================
@@ -58,7 +60,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // ========================================User Locotions Routes==========================================
 
-    Route::prefix('user')->controller(LocationController::class)->group(function () {
+    Route::prefix('user')->controller(LocationController::class)->middleware('throttle:google_map_api')->group(function () {
         Route::get('near-by-locations', 'getNearByLocations')->name('user.near-by-locations');
         Route::get('location/{user}', 'getUserLocation')->name('user.location');
     });
