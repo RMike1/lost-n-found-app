@@ -16,28 +16,6 @@ beforeEach(function () {
     $this->village = Village::factory()->create();
 });
 
-it('shows all approved items but not resolved to an authenticated user', function () {
-    Item::factory(3)->create([
-        'category_id' => $this->category->id,
-        'user_id' => $this->user->id,
-        'village_id' => $this->village->id,
-        'is_approved' => false,
-        'is_resolved' => true,
-    ]);
-    Item::factory(2)->create([
-        'category_id' => $this->category->id,
-        'user_id' => $this->user->id,
-        'village_id' => $this->village->id,
-        'is_approved' => true,
-        'is_resolved' => false,
-    ]);
-    $items = $this->actingAs($this->user)->getJson(route('items.index'))
-        ->assertOk();
-    expect($items->json())
-        ->items_counts->toBe(2)
-        ->items->toHaveCount(2);
-});
-
 it('create an item with valid data', function () {
     Storage::fake('images');
 
@@ -218,6 +196,30 @@ describe('user favorites tests', function () {
 });
 
 describe('user items test', function () {
+
+    it('shows all approved items but not resolved to an authenticated user', function () {
+        Item::factory(3)->create([
+            'category_id' => $this->category->id,
+            'user_id' => $this->user->id,
+            'village_id' => $this->village->id,
+            'is_approved' => false,
+            'is_resolved' => true,
+        ]);
+        Item::factory(2)->create([
+            'category_id' => $this->category->id,
+            'user_id' => $this->user->id,
+            'village_id' => $this->village->id,
+            'is_approved' => true,
+            'is_resolved' => false,
+        ]);
+        $items = $this->actingAs($this->user)->getJson(route('items.index'))
+            ->assertOk();
+        expect($items->json())
+            ->items_counts->toBe(2)
+            ->items->toHaveCount(2);
+    });
+
+
     it('allows user to view their own items', function () {
         $item = Item::factory(3)->create([
             'user_id' => $this->user->id,
