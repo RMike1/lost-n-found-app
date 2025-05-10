@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('is_resolved')->default(false);
             $table->boolean('is_approved')->default(false);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

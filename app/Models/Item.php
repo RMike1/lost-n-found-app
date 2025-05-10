@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Enums\PostTypeEnum;
+use App\Observers\ItemObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -10,12 +12,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Znck\Eloquent\Traits\BelongsToThrough;
 
+#[ObservedBy(ItemObserver::class)]
 class Item extends Model
 {
     /** @use HasFactory<\Database\Factories\ItemFactory> */
-    use BelongsToThrough, HasFactory, HasUlids;
+    use BelongsToThrough, HasFactory, HasUlids, SoftDeletes;
 
     protected $casts = [
         'post_type' => PostTypeEnum::class,
@@ -75,10 +79,12 @@ class Item extends Model
             $q->where('post_type', $postStatus);
         })->when($req->search, function ($q, $search) {
             $q->where(function ($q) use ($search) {
-                $q->wherelike('title', $search)
-                    ->orWherelike('description', $search)
-                    ->orWherelike('post_type', $search)
-                    ->orWhereRelation('category', 'name', 'like', '%'.$search.'%');
+                $q->whereAny([
+                    'title',
+                    'description',
+                    'post_type',
+                ], 'like', "%{$search}%")
+                    ->orWhereRelation('category', 'name', 'like', "%{$search}%");
             });
         });
     }

@@ -18,6 +18,7 @@ class ItemService
         return [
             $items = Item::query()
                 ->where('is_approved', true)
+                ->whereNot('is_resolved', true)
                 ->with(['category', 'user', 'village', 'cell', 'sector', 'district', 'itemImages' => fn ($query) => $query->primaryImage()->take(1)])
                 ->getFiltered($req)
                 ->latest()
@@ -131,12 +132,12 @@ class ItemService
 
     public function itemDelete(string $item): void
     {
-        $item = Item::find($item);
-        throw_unless($item, AppException::recordNotFound());
+        $itemRecord = Item::find($item);
+        throw_unless($itemRecord, AppException::recordNotFound());
         throw_if(
-            ! Gate::inspect('delete', $item)->allowed(),
+            ! Gate::inspect('delete', $itemRecord)->allowed(),
             AppException::forbidden('Not allowed to delete this item')
         );
-        $item->delete();
+        $itemRecord->delete();
     }
 }

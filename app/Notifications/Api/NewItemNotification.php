@@ -3,17 +3,18 @@
 namespace App\Notifications\Api;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ResetPasswordNotification extends Notification
+class NewItemNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(public $url, public $token)
+    public function __construct(public $item, public $user)
     {
         //
     }
@@ -34,10 +35,10 @@ class ResetPasswordNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->from('jonsnow@gmail.com', 'Lost and Found App Inc.')
-            ->subject('Reset Password')
-            ->action('Reset Password', url($this->url))
-            ->markdown('notifications.reset-password-notification', ['name' => $notifiable->name, 'token' => $this->token]);
+            ->from('lost&found@gmail.com', 'Lost and Found App Inc.')
+            ->subject('New Item')
+            ->action('New Item', url(route('items.show', $this->item->id)))
+            ->markdown('notifications.new-item-notification', ['name' => $notifiable->name, 'user' => $this->user->name]);
     }
 
     /**
