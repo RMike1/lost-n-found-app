@@ -15,7 +15,8 @@ class ItemController extends Controller
         $data = $this->itemService->item();
 
         return Inertia::render('items/Items', [
-            'categories' => $data,
+            'categories' => $data[0],
+            'items' => $data[1],
         ]);
     }
 
