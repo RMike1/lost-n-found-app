@@ -2,6 +2,8 @@
 import { cn } from "@/lib/utils";
 import { ContextMenu, ContextMenuTrigger } from "@/components/ui/context-menu";
 import { Card, CardContent, CardDescription } from "@/components/ui/card";
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
 
 // import PlusCircledIcon from '~icons/radix-icons/plus-circled'
 
@@ -56,15 +58,19 @@ const props = withDefaults(defineProps<CardItemsList>(), {
                 {{ props.item.post_type }}
               </small>
             </div>
-            <p class="text-xs text-muted-foreground">
+            <p class="text-xs text-foreground">
               {{ item.post_type == 'found' ? 'Finder : ' : 'Reporter : '  }} {{ props.item.user.name  }} 
             </p>
-            <p class="text-xs text-muted-foreground">
+            <p class="text-xs text-foreground">
              <span>Category : </span> {{ props.item.category.name  }} 
             </p>
-            <p class="text-xs text-muted-foreground">
+            <p class="text-xs text-foreground">
              <span>Location : </span> {{ props.item.village.name  }} 
             </p>
+              <div class="flex items-center space-x-2">
+                <Label for="is-approved">Is Approved</Label>
+                <Switch id="is-approved" />
+              </div>
           </div>
         </CardDescription>
       </CardContent>
