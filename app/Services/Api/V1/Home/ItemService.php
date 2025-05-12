@@ -36,7 +36,7 @@ class ItemService
             $item = Item::create($data);
             if ($req->hasFile('itemImages')) {
                 foreach ($req->file('itemImages') as $image) {
-                    $path = Storage::disk('public')->put('items_images', $image);
+                    $path = Storage::disk('images')->put('items_images', $image);
                     $item->itemImages()->create([
                         'url' => $path,
                         'is_primary' => true,
