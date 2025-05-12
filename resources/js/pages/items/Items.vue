@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import {Tabs,TabsContent,TabsList,TabsTrigger} from '@/components/ui/tabs'
@@ -15,15 +16,24 @@ import Sidebar from '@/components/Sidebar.vue'
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem} from '@/types';
 
+interface PaginatedItems{
+  current_page: number;
+  last_page: number;
+}
 
 interface Props {
     // mustVerifyEmail: boolean;
     status?: string;
     categories : object;
     items : object;
+    itemsPaginated : PaginatedItems
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
+
+const reachedEnd = computed(()=>{
+    return props.itemsPaginated.current_page >= props.itemsPaginated.last_page
+});
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -53,14 +63,12 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <TabsTrigger value="all" class="relative cursor-pointer">
                       All
                     </TabsTrigger>
-                    <TabsTrigger value="lost" class="cursor-pointer"> Lost </TabsTrigger>
-                    <TabsTrigger value="found" class="cursor-pointer">
-                      Found
+                    <TabsTrigger value="approved" class="cursor-pointer"> Approved </TabsTrigger>
+                    <TabsTrigger value="pendingApproval" class="cursor-pointer">
+                      Pending Approval
                     </TabsTrigger>
                   </TabsList>
-                  <div class="lg:hidden">
-                  
-                  </div>
+                  <div class="lg:hidden"></div>
                   <div class="hidden lg:block">
                     <div class="ml-auto mr-4 relative">
                       <Input
@@ -91,27 +99,42 @@ const breadcrumbs: BreadcrumbItem[] = [
                     <ScrollArea>
                       <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 space-x-2">
                         <ItemsList
-                          v-for="item in items"
-                          :key="item.id"
+                          v-for="(item, i) in props.items"
+                          :key="i"
                           :item="item"
                           class="w-[150px] lg:w-[250px]"
                           aspect-ratio="square"
                           :width="250"
                           :height="330"
                         />
+                        <WhenVisible 
+                          :always="!reachedEnd"
+                          :params="{
+                            data: {
+                              page: itemsPaginated.current_page + 1
+                            },
+                            only: ['items', 'itemsPaginated'],
+                          }"
+                        >
+                          <template #fallback>
+                            <span>
+                              Loading...
+                            </span>
+                          </template>
+                        </WhenVisible>
                       </div>
                     </ScrollArea>
                   </div>
                 </TabsContent>
                 <TabsContent
-                  value="lost"
+                  value="approved"
                   class="h-full flex-col border-none p-0 data-[state=active]:flex"
                 >
                   <div class="flex items-center justify-between">
                     <div class="space-y-1">
-                      <h2 class="text-2xl font-semibold tracking-tight">New Episodes</h2>
+                      <h2 class="text-2xl font-semibold tracking-tight">Select an Item to Analyse</h2>
                       <p class="text-sm text-muted-foreground">
-                        Your favorite podcasts. Updated daily.
+                        Sensitive information Hidden
                       </p>
                     </div>
                   </div>

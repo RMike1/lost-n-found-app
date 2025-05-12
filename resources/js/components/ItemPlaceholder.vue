@@ -32,32 +32,32 @@ import { Label } from '@/components/ui/label'
       </svg>
 
       <h3 class="mt-4 text-lg font-semibold">
-        No episodes added
+        No Approved Item added
       </h3>
       <p class="mb-4 mt-2 text-sm text-muted-foreground">
-        You have not added any podcasts. Add one below.
+        You have not added any items. Add one below.
       </p>
       <Dialog>
         <DialogTrigger>
           <Button size="sm" class="relative">
-            Add Podcast
+            Add Item
           </Button>
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add Podcast</DialogTitle>
+            <DialogTitle>Select Item</DialogTitle>
             <DialogDescription>
-              Copy and paste the podcast feed URL to import.
+              Copy to import.
             </DialogDescription>
           </DialogHeader>
           <div class="grid gap-4 py-4">
             <div class="grid gap-2">
-              <Label for="url">Podcast URL</Label>
-              <Input id="url" placeholder="https://example.com/feed.xml" />
+              <Label for="url">Item URL</Label>
+              <Input id="url" placeholder="..." />
             </div>
           </div>
           <DialogFooter>
-            <Button>Import Podcast</Button>
+            <Button>Submit Item</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

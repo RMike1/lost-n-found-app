@@ -5,11 +5,18 @@ import { Card, CardContent, CardDescription } from "@/components/ui/card";
 
 // import PlusCircledIcon from '~icons/radix-icons/plus-circled'
 
+interface Item{
+  title: string;
+  post_type: string;
+  item_images : any[];
+  user: object
+}
+
 interface CardItemsList {
   aspectRatio?: "portrait" | "square";
   width?: number;
   height?: number;
-  item: object;
+  item: Item;
 }
 
 const props = withDefaults(defineProps<CardItemsList>(), {
@@ -20,11 +27,6 @@ const props = withDefaults(defineProps<CardItemsList>(), {
 <template>
   <div :class="cn('space-y-3', $attrs.class ?? '')">
     <Card>
-      <!-- <CardHeader>
-  <CardTitle>
-  <h5 class="items-end text-sm">Lost</h5>
-  </CardTitle>
-  </CardHeader> -->
       <CardContent>
         <ContextMenu>
           <ContextMenuTrigger>
@@ -55,7 +57,13 @@ const props = withDefaults(defineProps<CardItemsList>(), {
               </small>
             </div>
             <p class="text-xs text-muted-foreground">
-              {{ props.item.user.name }}
+              {{ item.post_type == 'found' ? 'Finder : ' : 'Reporter : '  }} {{ props.item.user.name  }} 
+            </p>
+            <p class="text-xs text-muted-foreground">
+             <span>Category : </span> {{ props.item.category.name  }} 
+            </p>
+            <p class="text-xs text-muted-foreground">
+             <span>Location : </span> {{ props.item.village.name  }} 
             </p>
           </div>
         </CardDescription>

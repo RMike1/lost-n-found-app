@@ -7,17 +7,17 @@ use App\Models\Category;
 
 class ItemService
 {
-    public function item()
+    public function item(): array
     {
         $categories = Category::get(['id', 'name']);
-        $items = Item::query()
-        ->with(['category', 'user', 'village', 'cell', 'sector', 'district', 'itemImages' => fn ($query) => $query->primaryImage()->take(1)])
+        $items = Item::select('id','title','description','post_type','is_approved','category_id','user_id','village_id')
+        ->with(['category', 'user','village', 'itemImages' => fn ($query) => $query->primaryImage()->select('url','item_id')->take(1)])
         ->getFiltered(request())
         ->latest()
-        ->get();
+        ->paginate(6);
         return [
             $categories,
-            $items
+            $items,
         ];
     }
 }

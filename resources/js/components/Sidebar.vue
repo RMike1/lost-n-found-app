@@ -30,7 +30,7 @@ const props = defineProps<SidebarProps>();
               <circle cx="12" cy="12" r="10" />
               <polygon points="10 8 16 12 10 16 10 8" />
             </svg>
-            Approved
+            Lost
           </Button>
           <Button variant="ghost" class="w-full justify-start">
             <svg
@@ -48,7 +48,7 @@ const props = defineProps<SidebarProps>();
               <rect width="7" height="7" x="14" y="14" rx="1" />
               <rect width="7" height="7" x="3" y="14" rx="1" />
             </svg>
-            Pending Approval
+            Found
           </Button>
         </div>
       </div>

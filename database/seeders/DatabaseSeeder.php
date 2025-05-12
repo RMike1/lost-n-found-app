@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::factory()->create([
-            'name' => 'jon',
+            'name' => 'Jon',
             'email' => 'jon@gmail.com',
             'role' => UserRole::SUPER_ADMIN,
             'password' => 'password',
@@ -31,14 +31,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::factory()->create([
-            'name' => 'snow',
+            'name' => 'Snow',
             'email' => 'snow@gmail.com',
             'role' => UserRole::ADMIN,
             'password' => 'password',
             'village_id' => Village::inRandomOrder()->first()->id,
         ]);
         User::factory()->create([
-            'name' => 'chris',
+            'name' => 'Chris',
             'email' => 'chris@gmail.com',
             'role' => UserRole::ADMIN,
             'password' => 'password',

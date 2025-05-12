@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\web;
 
+use Inertia\Inertia;
+use Illuminate\Support\Arr;
 use App\Http\Controllers\Controller;
 use App\Services\Web\Admin\ItemService;
-use Inertia\Inertia;
 
 class ItemController extends Controller
 {
@@ -14,9 +15,12 @@ class ItemController extends Controller
     {
         $data = $this->itemService->item();
 
-        return Inertia::render('items/Items', [
+        return inertia()->render('items/Items', [
             'categories' => $data[0],
-            'items' => $data[1],
+            'items' => inertia()->merge(function() use($data){
+                return $data[1]->items();
+            }),
+            'itemsPaginated' => Arr::except($data[1]->toArray(), 'data'),
         ]);
     }
 

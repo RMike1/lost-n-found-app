@@ -30,11 +30,11 @@ class ItemImage extends Model
 
     public function getImageUrlAttribute(): string
     {
-        if (! $this->url || ! Storage::disk('public')->exists($this->url)) {
+        if (! $this->url || ! Storage::disk('images')->exists($this->url)) {
             return asset('storage/defaults/driving-licence.jpg');
         }
 
-        return Storage::disk('public')->url($this->url);
+        return Storage::disk('images')->url($this->url);
 
     }
 }
