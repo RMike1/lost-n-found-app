@@ -57,7 +57,7 @@ const props = withDefaults(defineProps<CardItemsList>(), {
               <h3 class="font-medium leading-none">
                 {{ props.item.title }}
               </h3>
-                <Badge variant="outline">
+                <Badge :variant="props.item.post_type === 'found' ? 'outline' : 'destructive'">
                 <span class="font-medium leading-none">
                   {{ props.item.post_type }}
                 </span>

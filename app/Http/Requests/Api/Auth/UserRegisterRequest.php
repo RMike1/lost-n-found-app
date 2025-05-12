@@ -20,7 +20,7 @@ class UserRegisterRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255', new UserNameRule],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'phone_number' => ['required', 'lowercase', 'max:255', 'unique:'.User::class],
+            'phone_number' => ['required', 'phone:RW', 'phone:RW,NATIONAL', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'village_id' => ['required', 'string', 'ulid'],
         ];
@@ -30,6 +30,7 @@ class UserRegisterRequest extends FormRequest
     {
         return [
             'village_id' => ['required' => 'Please select your Village'],
+            'phone_number' => ['phone' => 'Please use valid phone number.'],
         ];
     }
 }
