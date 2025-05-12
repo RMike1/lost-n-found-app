@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { cn } from "@/lib/utils";
 import { ContextMenu, ContextMenuTrigger } from "@/components/ui/context-menu";
-import { Card, CardContent, CardDescription } from "@/components/ui/card";
+import { SearchCheck  } from 'lucide-vue-next'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardFooter } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 
@@ -29,7 +32,7 @@ const props = withDefaults(defineProps<CardItemsList>(), {
 <template>
   <div :class="cn('space-y-3', $attrs.class ?? '')">
     <Card>
-      <CardContent>
+      <CardContent class="grid gap-4">
         <ContextMenu>
           <ContextMenuTrigger>
             <div class="overflow-hidden rounded-md">
@@ -50,30 +53,36 @@ const props = withDefaults(defineProps<CardItemsList>(), {
         </ContextMenu>
         <CardDescription>
           <div class="space-y-1 mt-3 text-sm">
-            <div class="flex flex-cols-2 justify-between items-center">
+            <div class="flex flex-cols-2 justify-between items-center mb-4">
               <h3 class="font-medium leading-none">
                 {{ props.item.title }}
               </h3>
-              <small>
-                {{ props.item.post_type }}
-              </small>
+                <Badge variant="outline">
+                <span class="font-medium leading-none">
+                  {{ props.item.post_type }}
+                </span>
+                </Badge>
             </div>
-            <p class="text-xs text-foreground">
-              {{ item.post_type == 'found' ? 'Finder : ' : 'Reporter : '  }} {{ props.item.user.name  }} 
+            <p class="text-xs font-medium leading-none mb-4">
+              {{ item.post_type == "found" ? "Finder : " : "Reporter : " }}
+              {{ props.item.user.name }}
             </p>
-            <p class="text-xs text-foreground">
-             <span>Category : </span> {{ props.item.category.name  }} 
+            <p class="text-xs font-medium leading-none mb-4">
+              <span>Category : </span> {{ props.item.category.name }}
             </p>
-            <p class="text-xs text-foreground">
-             <span>Location : </span> {{ props.item.village.name  }} 
+            <p class="text-xs font-medium leading-none mb-4">
+              <span>Location : </span> {{ props.item.village.name }}
             </p>
-              <div class="flex items-center space-x-2">
-                <Label for="is-approved">Is Approved</Label>
-                <Switch id="is-approved" />
-              </div>
+            <div class="flex items-center justify-between space-x-2">
+              <Label for="is-approved">Is Approved ?</Label>
+              <Switch id="is-approved"  />
+            </div>
           </div>
         </CardDescription>
       </CardContent>
+      <CardFooter>
+        <Button class="w-full"> <SearchCheck  class="h-4 w-4" /> Analyse </Button>
+      </CardFooter>
     </Card>
   </div>
 </template>
