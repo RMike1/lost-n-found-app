@@ -13,7 +13,7 @@ it('registers new user', function () {
         'email' => 'jondoe@gmail.com',
         'password' => 'password',
         'password_confirmation' => 'password',
-        'phone_number' => '07849123456',
+        'phone_number' => '0784912345',
         'village_id' => $this->village->id,
     ];
     $this->postJson('api/v1/register', $userData)
@@ -33,7 +33,7 @@ it('returns errors for invalid input', function () {
         'email' => '',
         'password' => 'password',
         'password_confirmation' => 'password',
-        'phone_number' => '07849123456',
+        'phone_number' => '0784912345',
         'village_id' => $this->village->id,
     ])->assertStatus(422)->assertOnlyInvalid(['email']);
 });
@@ -44,7 +44,7 @@ it('returns validation errors for unmatched passwords', function () {
         'email' => 'john@example.com',
         'password' => 'password',
         'password_confirmation' => 'password123',
-        'phone_number' => '07849123456',
+        'phone_number' => '0784912345',
         'village_id' => $this->village->id,
     ])->assertStatus(422)->assertOnlyInvalid(['password']);
 });
