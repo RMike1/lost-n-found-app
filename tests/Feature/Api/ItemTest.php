@@ -219,7 +219,6 @@ describe('user items test', function () {
             ->items->toHaveCount(2);
     });
 
-
     it('allows user to view their own items', function () {
         $item = Item::factory(3)->create([
             'user_id' => $this->user->id,

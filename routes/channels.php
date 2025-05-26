@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\User;
 use App\Models\Conversation;
+use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
 
 // Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
@@ -9,6 +9,6 @@ use Illuminate\Support\Facades\Broadcast;
 // });
 
 Broadcast::channel('conversation.{conversation}', function (User $user, Conversation $conversation) {
-    return $conversation->sender_id === $user->id || 
+    return $conversation->sender_id === $user->id ||
            $conversation->receiver_id === $user->id;
 });

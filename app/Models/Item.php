@@ -78,7 +78,7 @@ class Item extends Model
         })->when($req->postStatus, function ($q, $postStatus) {
             $q->where('post_type', $postStatus);
         })->when($req->approval, function ($q, $approval) {
-            $approvals=true;
+            $approvals = true;
             dd($approvals, request('approval'));
             $q->where('is_approved', request('approval'));
         })->when($req->search, function ($q, $search) {
