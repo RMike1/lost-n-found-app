@@ -10,7 +10,7 @@ import { Search } from 'lucide-vue-next'
 
 // import PlusCircledIcon from '~icons/radix-icons/plus-circled'
 import ItemsList from '@/components/ItemsList.vue'
-import ItemEmptyPlaceholder from '@/components/ItemPlaceholder.vue';
+// import ItemEmptyPlaceholder from '@/components/ItemPlaceholder.vue';
 
 import Sidebar from '@/components/Sidebar.vue'
 
@@ -143,7 +143,7 @@ const filterByCategory = (query) => {
                     </ScrollArea>
                   </div>
                 </TabsContent>
-                <TabsContent value="approved"class="h-full flex-col border-none p-0 data-[state=active]:flex">
+                <TabsContent value="approved" class="h-full flex-col border-none p-0 data-[state=active]:flex">
                   <div class="flex items-center justify-between">
                     <div class="space-y-1">
                       <h2 class="text-2xl font-semibold tracking-tight">All Items</h2>
@@ -184,7 +184,7 @@ const filterByCategory = (query) => {
                     </ScrollArea>
                   </div>
                 </TabsContent>
-                <TabsContent value="pending"class="h-full flex-col border-none p-0 data-[state=active]:flex">
+                <TabsContent value="pending" class="h-full flex-col border-none p-0 data-[state=active]:flex">
                   <div class="flex items-center justify-between">
                     <div class="space-y-1">
                       <h2 class="text-2xl font-semibold tracking-tight">All Items</h2>
@@ -235,7 +235,6 @@ const filterByCategory = (query) => {
                     </div>
                   </div>
                   <Separator class="my-4" />
-                  <ItemEmptyPlaceholder />
                 </TabsContent> -->
               </Tabs>
             </div>

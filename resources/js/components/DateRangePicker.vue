@@ -8,8 +8,8 @@ import { CalendarDate, DateFormatter, getLocalTimeZone, now } from '@internation
 import { Calendar as CalendarIcon } from 'lucide-vue-next'
 import { ref, watch  } from 'vue'
 
-const props = defineProps<{
-    date_range: Object
+defineProps<{
+    date_range: object
 }>();
 
 
