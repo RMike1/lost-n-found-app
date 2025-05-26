@@ -77,6 +77,10 @@ class Item extends Model
             $q->whereRelation('category', 'id', $category);
         })->when($req->postStatus, function ($q, $postStatus) {
             $q->where('post_type', $postStatus);
+        })->when($req->approval, function ($q, $approval) {
+            $approvals=true;
+            dd($approvals, request('approval'));
+            $q->where('is_approved', request('approval'));
         })->when($req->search, function ($q, $search) {
             $q->where(function ($q) use ($search) {
                 $q->whereAny([

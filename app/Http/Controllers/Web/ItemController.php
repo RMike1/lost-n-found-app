@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\web;
 
 use Inertia\Inertia;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use App\Http\Controllers\Controller;
 use App\Services\Web\Admin\ItemService;
@@ -11,9 +12,9 @@ class ItemController extends Controller
 {
     public function __construct(private ItemService $itemService) {}
 
-    public function getItems()
+    public function getItems(Request $req)
     {
-        $data = $this->itemService->item();
+        $data = $this->itemService->item($req);
 
         return inertia()->render('items/Items', [
             'categories' => $data[0],

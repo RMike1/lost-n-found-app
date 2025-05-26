@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { router } from '@inertiajs/vue3';
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import {Tabs,TabsContent,TabsList,TabsTrigger} from '@/components/ui/tabs'
@@ -45,6 +46,17 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/items',
     },
 ];
+
+const params =route().params;
+const filter = (query) => {
+  router.get(route('items.all'), { approval: query, postStatus: params.postStatus, category:params.category })
+} 
+const filterByPostType = (query) => {
+  router.get(route('items.all'), { postStatus: query, approval: params.approval, category:params.category })
+} 
+const filterByCategory = (query) => {
+  router.get(route('items.all'), { category: query, postStatus: params.postStatus, approval:params.approval })
+} 
 </script>
 
 <template>
@@ -54,17 +66,22 @@ const breadcrumbs: BreadcrumbItem[] = [
     <div class="border-t">
       <div class="bg-background">
         <div class="grid lg:grid-cols-5">
-          <Sidebar :categories="categories" class="hidden lg:block" />
+          <Sidebar :categories="categories" @filterByPostType="(e)=>filterByPostType(e)" @filterByCategory="(e)=>filterByCategory(e)" class="hidden lg:block" />
           <div class="col-span-3 lg:col-span-4 lg:border-l">
             <div class="h-full px-4 py-6 lg:px-8">
               <Tabs default-value="all" class="h-full space-y-6">
                 <div class="space-between flex items-center justify-between">
                   <TabsList>
-                    <TabsTrigger value="all" class="relative cursor-pointer">
-                      All
+                
+                   <TabsTrigger value="all" class="relative cursor-pointer">
+                        <Link :href="route('items.all', { approval:null, postStatus: null, category:null })" class="relative cursor-pointer">
+                          All
+                        </Link>
+                    </TabsTrigger> 
+                    <TabsTrigger value="approved" @click="filter(true)" class="cursor-pointer">
+                     Approved 
                     </TabsTrigger>
-                    <TabsTrigger value="approved" class="cursor-pointer"> Approved </TabsTrigger>
-                    <TabsTrigger value="pendingApproval" class="cursor-pointer">
+                    <TabsTrigger value="pending" @click="filter(false)" class="cursor-pointer">
                       Pending Approval
                     </TabsTrigger>
                   </TabsList>
@@ -126,10 +143,89 @@ const breadcrumbs: BreadcrumbItem[] = [
                     </ScrollArea>
                   </div>
                 </TabsContent>
-                <TabsContent
-                  value="approved"
-                  class="h-full flex-col border-none p-0 data-[state=active]:flex"
-                >
+                <TabsContent value="approved"class="h-full flex-col border-none p-0 data-[state=active]:flex">
+                  <div class="flex items-center justify-between">
+                    <div class="space-y-1">
+                      <h2 class="text-2xl font-semibold tracking-tight">All Items</h2>
+                      <p class="text-sm text-muted-foreground">
+                        Including Approved Items.
+                      </p>
+                    </div>
+                  </div>
+                  <Separator class="my-4" />
+                  <div class="relative">
+                    <ScrollArea>
+                      <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 space-x-2">
+                        <ItemsList
+                          v-for="(item, i) in props.items"
+                          :key="i"
+                          :item="item"
+                          class="w-[150px] lg:w-[250px]"
+                          aspect-ratio="square"
+                          :width="250"
+                          :height="330"
+                        />
+                        <WhenVisible 
+                          :always="!reachedEnd"
+                          :params="{
+                            data: {
+                              page: itemsPaginated.current_page + 1
+                            },
+                            only: ['items', 'itemsPaginated'],
+                          }"
+                        >
+                          <template #fallback>
+                            <span>
+                              Loading...
+                            </span>
+                          </template>
+                        </WhenVisible>
+                      </div>
+                    </ScrollArea>
+                  </div>
+                </TabsContent>
+                <TabsContent value="pending"class="h-full flex-col border-none p-0 data-[state=active]:flex">
+                  <div class="flex items-center justify-between">
+                    <div class="space-y-1">
+                      <h2 class="text-2xl font-semibold tracking-tight">All Items</h2>
+                      <p class="text-sm text-muted-foreground">
+                        Including Pending Items.
+                      </p>
+                    </div>
+                  </div>
+                  <Separator class="my-4" />
+                  <div class="relative">
+                    <ScrollArea>
+                      <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 space-x-2">
+                        <ItemsList
+                          v-for="(item, i) in props.items"
+                          :key="i"
+                          :item="item"
+                          class="w-[150px] lg:w-[250px]"
+                          aspect-ratio="square"
+                          :width="250"
+                          :height="330"
+                        />
+                        <WhenVisible 
+                          :always="!reachedEnd"
+                          :params="{
+                            data: {
+                              page: itemsPaginated.current_page + 1
+                            },
+                            only: ['items', 'itemsPaginated'],
+                          }"
+                        >
+                          <template #fallback>
+                            <span>
+                              Loading...
+                            </span>
+                          </template>
+                        </WhenVisible>
+                      </div>
+                    </ScrollArea>
+                  </div>
+                </TabsContent>
+                <!-- <TabsContent value="approved"class="h-full flex-col border-none p-0 data-[state=active]:flex">
                   <div class="flex items-center justify-between">
                     <div class="space-y-1">
                       <h2 class="text-2xl font-semibold tracking-tight">Select an Item to Analyse</h2>
@@ -140,7 +236,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                   </div>
                   <Separator class="my-4" />
                   <ItemEmptyPlaceholder />
-                </TabsContent>
+                </TabsContent> -->
               </Tabs>
             </div>
           </div>

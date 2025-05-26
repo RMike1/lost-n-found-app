@@ -16,7 +16,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('dashboard', DashboardController::class)->name('dashboard');
 
     Route::prefix('items')->controller(ItemController::class)->group(function () {
-        Route::get('/', 'getItems')->name('items.found');
+        Route::get('/', 'getItems')->name('items.all');
         // Route::get('lost', 'getLostItems')->name('items.lost');
         // Route::get('found', 'getFoundItems')->name('items.found');
     });

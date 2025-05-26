@@ -74,8 +74,8 @@ const props = withDefaults(defineProps<CardItemsList>(), {
               <span>Location : </span> {{ props.item.village.name }}
             </p>
             <div class="flex items-center justify-between space-x-2">
-              <Label for="is-approved">Is Approved ?</Label>
-              <Switch id="is-approved"  />
+              <Label for="is-approved">Approved ?</Label>
+              <span> {{ props.item.is_approved ? 'Yes' : 'No' }}</span>
             </div>
           </div>
         </CardDescription>
