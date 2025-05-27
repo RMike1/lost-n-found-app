@@ -45,6 +45,12 @@ jobs:
         with:
           php-version: '8.3.12'
           extensions: mysqli, pdo_mysql
+          
+      - name: Install Node.js dependencies
+        run: npm ci
+
+      - name: Build Assets
+        run: npm run build
 
       - name: Set up .env.testing
         run: |
