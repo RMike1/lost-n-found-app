@@ -4,7 +4,10 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface SidebarProps {
-  categories : Array
+  categories: Array<{ id: string; name: string }>;
+   currentPostType?: string;
+  currentCategory?: string;
+  currentApproval?: string;
 }
 
 const props = defineProps<SidebarProps>();
@@ -13,11 +16,10 @@ const emit = defineEmits([
   'filterByPostType','filterByCategory'
 ]);
 
-const filterByPostType = (query) => {
+const filterByPostType = (query: string) => {
   emit('filterByPostType',query)
 } 
-const filterByCategory = (query) => {
-
+const filterByCategory = (query: string) => {
   emit('filterByCategory',query)
 } 
 </script>

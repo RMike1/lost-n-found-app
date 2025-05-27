@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
-import {Tabs,TabsContent,TabsList,TabsTrigger} from '@/components/ui/tabs'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 // import {Select} from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Search } from 'lucide-vue-next'
@@ -15,71 +15,83 @@ import ItemsList from '@/components/ItemsList.vue'
 import Sidebar from '@/components/Sidebar.vue'
 
 import AppLayout from '@/layouts/AppLayout.vue';
-import { type BreadcrumbItem} from '@/types';
+import { type BreadcrumbItem } from '@/types';
 
-interface PaginatedItems{
+interface PaginatedItems {
   current_page: number;
   last_page: number;
 }
 
 interface Props {
-    // mustVerifyEmail: boolean;
-    status?: string;
-    categories : object;
-    items : object;
-    itemsPaginated : PaginatedItems
+  // mustVerifyEmail: boolean;
+  status?: string;
+  categories: Array<{ id: string; name: string }>;
+  items: object;
+  itemsPaginated: PaginatedItems
 }
 
 const props = defineProps<Props>();
 
-const reachedEnd = computed(()=>{
-    return props.itemsPaginated.current_page >= props.itemsPaginated.last_page
+const reachedEnd = computed(() => {
+  return props.itemsPaginated.current_page >= props.itemsPaginated.last_page
 });
 
 const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Items',
-        href: '/items',
-    },
-    {
-        title: 'All Items',
-        href: '/items',
-    },
+  {
+    title: 'Items',
+    href: '/items',
+  },
+  {
+    title: 'All Items',
+    href: '/items',
+  },
 ];
 
-const params =route().params;
-const filter = (query) => {
-  router.get(route('items.all'), { approval: query, postStatus: params.postStatus, category:params.category })
-} 
-const filterByPostType = (query) => {
-  router.get(route('items.all'), { postStatus: query, approval: params.approval, category:params.category })
-} 
-const filterByCategory = (query) => {
-  router.get(route('items.all'), { category: query, postStatus: params.postStatus, approval:params.approval })
+const params = route().params;
+
+const filter = (query: number) => {
+  router.get(route('items.all'), { approval: query, postStatus: params.postStatus, category: params.category },
+    { preserveState: true, preserveScroll: true })
+}
+const filterByPostType = (query: string ) => {
+  router.get(route('items.all'), { postStatus: query, approval: params.approval, category: params.category },
+    { preserveState: true, preserveScroll: true })
+}
+const filterByCategory = (query: string ) => {
+  router.get(route('items.all'), { category: query, postStatus: params.postStatus, approval: params.approval },
+    { preserveState: true, preserveScroll: true })
 } 
 </script>
 
 <template>
   <AppLayout :breadcrumbs="breadcrumbs">
+
     <Head title="Lost-Items" />
     <!-- <Menu /> -->
     <div class="border-t">
       <div class="bg-background">
         <div class="grid lg:grid-cols-5">
-          <Sidebar :categories="categories" @filterByPostType="(e)=>filterByPostType(e)" @filterByCategory="(e)=>filterByCategory(e)" class="hidden lg:block" />
+          <Sidebar   :categories="categories" 
+          :current-post-type="params.postStatus"
+          :current-category="params.category"
+          :current-approval="params.approval" @filterByPostType="(e) => filterByPostType(e)"
+            @filterByCategory="(e) => filterByCategory(e)" class="hidden lg:block" />
           <div class="col-span-3 lg:col-span-4 lg:border-l">
             <div class="h-full px-4 py-6 lg:px-8">
               <Tabs default-value="all" class="h-full space-y-6">
                 <div class="space-between flex items-center justify-between">
                   <TabsList>
-                
-                   <TabsTrigger value="all" class="relative cursor-pointer">
-                        <Link :href="route('items.all', { approval:null, postStatus: null, category:null })" class="relative cursor-pointer">
-                          All
-                        </Link>
-                    </TabsTrigger> 
+
+                    <TabsTrigger value="all" class="relative cursor-pointer">
+                      <Link :href="route('items.all', { approval: null, postStatus: null, category: null })"
+                        class="relative cursor-pointer" 
+                        preserve-scroll
+                        preserve-state>
+                      All
+                      </Link>
+                    </TabsTrigger>
                     <TabsTrigger value="approved" @click="filter(1)" class="cursor-pointer">
-                     Approved 
+                      Approved
                     </TabsTrigger>
                     <TabsTrigger value="pending" @click="filter(0)" class="cursor-pointer">
                       Pending Approval
@@ -88,15 +100,8 @@ const filterByCategory = (query) => {
                   <div class="lg:hidden"></div>
                   <div class="hidden lg:block">
                     <div class="ml-auto mr-4 relative">
-                      <Input
-                        id="search"
-                        type="text"
-                        placeholder="Search..."
-                        class="pl-10"
-                      />
-                      <span
-                        class="absolute start-0 inset-y-0 flex items-center justify-center px-2"
-                      >
+                      <Input id="search" type="text" placeholder="Search..." class="pl-10" />
+                      <span class="absolute start-0 inset-y-0 flex items-center justify-center px-2">
                         <Search class="size-6 text-muted-foreground" />
                       </span>
                     </div>
@@ -115,24 +120,14 @@ const filterByCategory = (query) => {
                   <div class="relative">
                     <ScrollArea>
                       <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 space-x-2">
-                        <ItemsList
-                          v-for="(item, i) in props.items"
-                          :key="i"
-                          :item="item"
-                          class="w-[150px] lg:w-[250px]"
-                          aspect-ratio="square"
-                          :width="250"
-                          :height="330"
-                        />
-                        <WhenVisible 
-                          :always="!reachedEnd"
-                          :params="{
-                            data: {
-                              page: itemsPaginated.current_page + 1
-                            },
-                            only: ['items', 'itemsPaginated'],
-                          }"
-                        >
+                        <ItemsList v-for="(item, i) in props.items" :key="i" :item="item" class="w-[150px] lg:w-[250px]"
+                          aspect-ratio="square" :width="250" :height="330" />
+                        <WhenVisible :always="!reachedEnd" :params="{
+                          data: {
+                            page: itemsPaginated.current_page + 1
+                          },
+                          only: ['items', 'itemsPaginated'],
+                        }">
                           <template #fallback>
                             <span>
                               Loading...
@@ -156,24 +151,14 @@ const filterByCategory = (query) => {
                   <div class="relative">
                     <ScrollArea>
                       <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 space-x-2">
-                        <ItemsList
-                          v-for="(item, i) in props.items"
-                          :key="i"
-                          :item="item"
-                          class="w-[150px] lg:w-[250px]"
-                          aspect-ratio="square"
-                          :width="250"
-                          :height="330"
-                        />
-                        <WhenVisible 
-                          :always="!reachedEnd"
-                          :params="{
-                            data: {
-                              page: itemsPaginated.current_page + 1
-                            },
-                            only: ['items', 'itemsPaginated'],
-                          }"
-                        >
+                        <ItemsList v-for="(item, i) in props.items" :key="i" :item="item" class="w-[150px] lg:w-[250px]"
+                          aspect-ratio="square" :width="250" :height="330" />
+                        <WhenVisible :always="!reachedEnd" :params="{
+                          data: {
+                            page: itemsPaginated.current_page + 1
+                          },
+                          only: ['items', 'itemsPaginated'],
+                        }">
                           <template #fallback>
                             <span>
                               Loading...
@@ -197,24 +182,14 @@ const filterByCategory = (query) => {
                   <div class="relative">
                     <ScrollArea>
                       <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 space-x-2">
-                        <ItemsList
-                          v-for="(item, i) in props.items"
-                          :key="i"
-                          :item="item"
-                          class="w-[150px] lg:w-[250px]"
-                          aspect-ratio="square"
-                          :width="250"
-                          :height="330"
-                        />
-                        <WhenVisible 
-                          :always="!reachedEnd"
-                          :params="{
-                            data: {
-                              page: itemsPaginated.current_page + 1
-                            },
-                            only: ['items', 'itemsPaginated'],
-                          }"
-                        >
+                        <ItemsList v-for="(item, i) in props.items" :key="i" :item="item" class="w-[150px] lg:w-[250px]"
+                          aspect-ratio="square" :width="250" :height="330" />
+                        <WhenVisible :always="!reachedEnd" :params="{
+                          data: {
+                            page: itemsPaginated.current_page + 1
+                          },
+                          only: ['items', 'itemsPaginated'],
+                        }">
                           <template #fallback>
                             <span>
                               Loading...
