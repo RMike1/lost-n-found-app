@@ -78,10 +78,10 @@ const filterByCategory = (query) => {
                           All
                         </Link>
                     </TabsTrigger> 
-                    <TabsTrigger value="approved" @click="filter(true)" class="cursor-pointer">
+                    <TabsTrigger value="approved" @click="filter(1)" class="cursor-pointer">
                      Approved 
                     </TabsTrigger>
-                    <TabsTrigger value="pending" @click="filter(false)" class="cursor-pointer">
+                    <TabsTrigger value="pending" @click="filter(0)" class="cursor-pointer">
                       Pending Approval
                     </TabsTrigger>
                   </TabsList>
@@ -107,7 +107,7 @@ const filterByCategory = (query) => {
                     <div class="space-y-1">
                       <h2 class="text-2xl font-semibold tracking-tight">All Items</h2>
                       <p class="text-sm text-muted-foreground">
-                        Including Lost and Found Items.
+                        Displaying all reported Items.
                       </p>
                     </div>
                   </div>
@@ -146,9 +146,9 @@ const filterByCategory = (query) => {
                 <TabsContent value="approved" class="h-full flex-col border-none p-0 data-[state=active]:flex">
                   <div class="flex items-center justify-between">
                     <div class="space-y-1">
-                      <h2 class="text-2xl font-semibold tracking-tight">All Items</h2>
+                      <h2 class="text-2xl font-semibold tracking-tight">Verified Reports</h2>
                       <p class="text-sm text-muted-foreground">
-                        Including Approved Items.
+                        These items have been verified and approved.
                       </p>
                     </div>
                   </div>
@@ -187,9 +187,9 @@ const filterByCategory = (query) => {
                 <TabsContent value="pending" class="h-full flex-col border-none p-0 data-[state=active]:flex">
                   <div class="flex items-center justify-between">
                     <div class="space-y-1">
-                      <h2 class="text-2xl font-semibold tracking-tight">All Items</h2>
+                      <h2 class="text-2xl font-semibold tracking-tight">Under Review</h2>
                       <p class="text-sm text-muted-foreground">
-                        Including Pending Items.
+                        Items awaiting review and approval.
                       </p>
                     </div>
                   </div>
