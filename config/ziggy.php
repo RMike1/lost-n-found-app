@@ -1,0 +1,30 @@
+<?php
+
+return [
+    'except'=>[
+        'api.login',
+        'api.register',
+        'api.password.email',
+        'api.password.reset',
+        'api.logout',
+        'districts',
+        'sectors',
+        'cells',
+        'villages',
+        'allvillages',
+        'user.details',
+        'items.index',
+        'items.store',
+        'items.show',
+        'items.user',
+        'items.favorite',
+        'favorites',
+        'categories',
+        'message.send',
+        'conversation',
+        'conversations',
+        'messages.unreadcount',
+        'user.near-by-locations',
+        'user.location',
+    ],
+];
