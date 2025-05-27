@@ -82,7 +82,9 @@ jobs:
         run: cp .env.example .env
 
       - name: Generate application key
-        run: php artisan key:generate 
+        run: |
+          php artisan key:generate --env=testing
+          php artisan config:cache --env=testing
 
       - name: Run Migrations
         run: php artisan migrate --env=testing --force
