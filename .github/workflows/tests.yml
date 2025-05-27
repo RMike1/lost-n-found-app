@@ -48,14 +48,16 @@ jobs:
       - name: Install Node Dependencies
         run: npm ci
 
-      - name: Install Composer dependencies
-        uses: actions/cache@v4
+      - name: Install Dependencies
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
         with:
           path: vendor
-          key: composer-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            composer-
-
+            ${{ runner.os }}-composer-
 
       - name: Set up .env.testing
         run: |
