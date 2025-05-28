@@ -31,7 +31,7 @@ class ItemImage extends Model
     public function getImageUrlAttribute(): string
     {
         if (! $this->url || ! Storage::disk('public')->exists($this->url)) {
-            return asset('storage/defaults/driving-licence.jpg');
+            return asset('storage/defaults/keys.jpg');
         }
 
         return Storage::disk('public')->url($this->url);

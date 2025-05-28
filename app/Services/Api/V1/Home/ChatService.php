@@ -36,12 +36,12 @@ class ChatService
             throw_if(! Gate::inspect('canMessage', [$conversation, $itemModel])->allowed(),
                 AppException::forbidden('Unauthorized for this chat'));
             if ($conversation->exists) {
-                defer(function () use ($conversation, $user) {
+                // defer(function () use ($conversation, $user) {
                     Message::where('conversation_id', $conversation->id)
                         ->whereNull('read_at')
                         ->where('sender_id', '!=', $user)
                         ->update(['read_at' => now()]);
-                });
+                // });
             }
             $messages = $conversation->messages()
                 ->with('sender')
