@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
+import ItemPlaceholder from '@/components/ItemPlaceholder.vue'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 // import {Select} from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
@@ -40,11 +41,7 @@ const breadcrumbs: BreadcrumbItem[] = [
   {
     title: 'Items',
     href: '/items',
-  },
-  {
-    title: 'All Items',
-    href: '/items',
-  },
+  }
 ];
 
 const params = route().params;
@@ -95,6 +92,9 @@ const filterByCategory = (query: string ) => {
                     </TabsTrigger>
                     <TabsTrigger value="pending" @click="filter(0)" class="cursor-pointer">
                       Pending Approval
+                    </TabsTrigger>
+                    <TabsTrigger value="test" @click="filter(0)" class="cursor-pointer">
+                      Test
                     </TabsTrigger>
                   </TabsList>
                   <div class="lg:hidden"></div>
@@ -200,7 +200,7 @@ const filterByCategory = (query: string ) => {
                     </ScrollArea>
                   </div>
                 </TabsContent>
-                <!-- <TabsContent value="approved"class="h-full flex-col border-none p-0 data-[state=active]:flex">
+                <TabsContent value="test"class="h-full flex-col border-none p-0 data-[state=active]:flex">
                   <div class="flex items-center justify-between">
                     <div class="space-y-1">
                       <h2 class="text-2xl font-semibold tracking-tight">Select an Item to Analyse</h2>
@@ -210,7 +210,8 @@ const filterByCategory = (query: string ) => {
                     </div>
                   </div>
                   <Separator class="my-4" />
-                </TabsContent> -->
+                  <ItemPlaceholder  />
+                </TabsContent>
               </Tabs>
             </div>
           </div>

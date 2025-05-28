@@ -30,7 +30,7 @@ const filterByCategory = (query: string) => {
       <div class="px-3 py-2">
         <h2 class="mb-2 px-4 text-lg font-semibold tracking-tight">Items</h2>
         <div class="space-y-1">
-        <Button @click="filterByPostType('found')" variant="secondary" class="w-full justify-start">
+        <Button @click="filterByPostType('found')" :variant="currentPostType==='found' ? 'secondary' : 'ghost'" class="w-full justify-start">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -48,7 +48,7 @@ const filterByCategory = (query: string) => {
             </svg>
             Found
           </Button>
-          <Button @click="filterByPostType('lost')" variant="secondary" class="w-full justify-start">
+          <Button @click="filterByPostType('lost')" :variant="currentPostType==='lost' ? 'secondary' : 'ghost'" class="w-full justify-start">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -75,7 +75,7 @@ const filterByCategory = (query: string) => {
               v-for="(category, i) in props.categories"
               :key="`${category}-${i}`"
               @click="filterByCategory(category.id)"
-              variant="ghost"
+              :variant="currentCategory=== category.id ? 'secondary' : 'ghost'"
               class="w-full justify-start font-normal"
             >
               <svg
