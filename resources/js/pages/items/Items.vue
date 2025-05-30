@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { router } from '@inertiajs/vue3';
+import { router, useForm } from '@inertiajs/vue3';
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import ItemPlaceholder from '@/components/ItemPlaceholder.vue'
@@ -28,7 +28,8 @@ interface Props {
   status?: string;
   categories: Array<{ id: string; name: string }>;
   items: object;
-  itemsPaginated: PaginatedItems
+  itemsPaginated: PaginatedItems;
+  searchTerm?: string;
 }
 
 const props = defineProps<Props>();
@@ -47,17 +48,29 @@ const breadcrumbs: BreadcrumbItem[] = [
 const params = route().params;
 
 const filter = (query: number) => {
-  router.get(route('items.all'), { approval: query, postStatus: params.postStatus, category: params.category },
+  router.get(route('items.all'), { approval: query, postStatus: params.postStatus, category: params.category, search: form.search },
     { preserveState: true, preserveScroll: true })
 }
 const filterByPostType = (query: string ) => {
-  router.get(route('items.all'), { postStatus: query, approval: params.approval, category: params.category },
+  router.get(route('items.all'), { postStatus: query, approval: params.approval, category: params.category, search: form.search },
     { preserveState: true, preserveScroll: true })
 }
 const filterByCategory = (query: string ) => {
-  router.get(route('items.all'), { category: query, postStatus: params.postStatus, approval: params.approval },
+  router.get(route('items.all'), { category: query, postStatus: params.postStatus, approval: params.approval, search: form.search },
     { preserveState: true, preserveScroll: true })
 } 
+
+const form = useForm({
+  search: props.searchTerm,
+});
+
+const search = () => {
+  router.get(route('items.all'), { search: form.search, approval: params.approval, postStatus: params.postStatus, category: params.category },
+    { preserveState: true, preserveScroll: true })
+}
+const resetSearch = () => {
+  form.search = '';
+}
 </script>
 
 <template>
@@ -80,7 +93,8 @@ const filterByCategory = (query: string ) => {
                   <TabsList>
 
                     <TabsTrigger value="all" class="relative cursor-pointer">
-                      <Link :href="route('items.all', { approval: null, postStatus: null, category: null })"
+                      <Link :href="route('items.all', { ...params, approval: null, postStatus: null, category: null, page: null, search: null })"
+                        @click="resetSearch"
                         class="relative cursor-pointer" 
                         preserve-scroll
                         preserve-state>
@@ -99,12 +113,14 @@ const filterByCategory = (query: string ) => {
                   </TabsList>
                   <div class="lg:hidden"></div>
                   <div class="hidden lg:block">
-                    <div class="ml-auto mr-4 relative">
-                      <Input id="search" type="text" placeholder="Search..." class="pl-10" />
-                      <span class="absolute start-0 inset-y-0 flex items-center justify-center px-2">
-                        <Search class="size-6 text-muted-foreground" />
-                      </span>
-                    </div>
+                    <form @submit.prevent="search" class="flex items-center">
+                      <div class="ml-auto mr-4 relative">
+                        <Input id="search" type="text" v-model="form.search" placeholder="Search..." class="pl-10" />
+                        <span class="absolute start-0 inset-y-0 flex items-center justify-center px-2">
+                          <Search class="size-6 text-muted-foreground" />
+                        </span>
+                      </div>
+                    </form>
                   </div>
                 </div>
                 <TabsContent value="all" class="border-none p-0 outline-none">

@@ -22,6 +22,7 @@ class ItemController extends Controller
                 return $data[1]->items();
             }),
             'itemsPaginated' => Arr::except($data[1]->toArray(), 'data'),
+            'searchTerm' => $req->search,
         ]);
     }
 
