@@ -107,9 +107,6 @@ const resetSearch = () => {
                     <TabsTrigger value="pending" @click="filter(0)" class="cursor-pointer">
                       Pending Approval
                     </TabsTrigger>
-                    <TabsTrigger value="test" @click="filter(0)" class="cursor-pointer">
-                      Test
-                    </TabsTrigger>
                   </TabsList>
                   <div class="lg:hidden"></div>
                   <div class="hidden lg:block">
@@ -226,7 +223,6 @@ const resetSearch = () => {
                     </div>
                   </div>
                   <Separator class="my-4" />
-                  <ItemPlaceholder  />
                 </TabsContent>
               </Tabs>
             </div>
