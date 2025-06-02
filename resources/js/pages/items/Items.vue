@@ -136,7 +136,7 @@ const resetSearch = () => {
                   <div class="relative">
                     <ScrollArea>
                       <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 space-x-2">
-                        <ItemsList v-for="(item, i) in props.items" :key="i" :item="item" class="w-[150px] lg:w-[250px]"
+                        <ItemsList v-for="(item, i) in props.items" :key="i" :item="item" class="w-[180px] lg:w-[250px]"
                           aspect-ratio="square" :width="250" :height="330" />
                         <WhenVisible :always="!reachedEnd" :params="{
                           data: {
