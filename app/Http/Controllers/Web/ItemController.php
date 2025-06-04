@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Item;
 use App\Services\Web\Admin\ItemService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -26,9 +27,12 @@ class ItemController extends Controller
         ]);
     }
 
-    public function getLostItems()
+    public function showItem(Item $item)
     {
-        return Inertia::render('items/Lost-Items');
+        return Inertia::render('items/ItemDetails', [
+            'item' => $this->itemService->getItemDetails($item),
+            'previousUrl' => url()->previous(),
+        ]);
     }
 
     public function getFoundItems()

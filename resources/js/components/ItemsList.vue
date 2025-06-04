@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { ContextMenu, ContextMenuTrigger } from "@/components/ui/context-menu";
 import { createReusableTemplate, useMediaQuery } from '@vueuse/core'
 import { ref } from 'vue'
-import { EyeOff, SearchCheck } from 'lucide-vue-next'
+import { EyeOff, View } from 'lucide-vue-next'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter } from '@/components/ui/card'
@@ -38,6 +38,7 @@ import {
 } from '@/components/ui/form'
 
 interface Item {
+  id: string;
   title: string;
   post_type: string;
   item_images: Array<{ image_url: string }>;
@@ -113,11 +114,12 @@ const props = withDefaults(defineProps<CardItemsList>(), {
             </CardDescription>
           </CardContent>
           <CardFooter>
-            <DialogTrigger as-child>
-              <Button class="w-full">
-                <SearchCheck class="h-4 w-4" /> Review
+              <Link :href="route('item.show',props.item.id)" class="w-full">
+              <Button class="w-full flex items-center justify-center gap-2">
+                View Details
+                <View class="h-4 w-4" />
               </Button>
-            </DialogTrigger>
+              </Link>
           </CardFooter>
         </Card>
 
@@ -128,56 +130,60 @@ const props = withDefaults(defineProps<CardItemsList>(), {
               ipsum dolor sit amet consectetur adipisicing elit. Quasi, cumque. Lorem ipsum dolor sit amet consectetur
             </DialogDescription>
           </DialogHeader>
-          <!-- <div class="grid grid-cols-2 gap-4 py-4 overflow-y-auto px-6"> -->
-          <!-- <Card>
-                <CardContent class="flex flex-col justify-between gap-4"> -->
-          <ContextMenu class="grid grid-cols-2 gap-4 py-4 overflow-y-auto px-6">
-            <ContextMenuTrigger>
-              <div class="overflow-hidden rounded-md">
-                <img :src="props.item.item_images[0]['image_url']" :alt="props.item.title" :width="width"
-                  :height="height" :class="cn(
-                    'h-auto w-auto object-cover transition-all hover:scale-105',
-                    aspectRatio === 'portrait' ? 'aspect-[3/4]' : 'aspect-square'
-                  )
-                    " />
-              </div>
-              <Button variant="outline" class="w-full" @click="isOpen = true">
-                <EyeOff class="h-4 w-4" /> Hide Sensitive info
-              </Button>
-            </ContextMenuTrigger>
-            <ContextMenuContent>
-                <div class="space-y-1 mt-3 text-sm">
-                      <div class="flex flex-cols-2 justify-between items-center mb-4">
-                        <h3 class="font-medium leading-none">
-                          {{ props.item.title }}
-                        </h3>
-                        <Badge :variant="props.item.post_type === 'found' ? 'outline' : 'destructive'">
-                          <span class="font-medium leading-none">
-                            {{ props.item.post_type }}
-                          </span>
-                        </Badge>
-                      </div>
-                      <p class="text-xs font-medium leading-none mb-4">
-                        {{ item.post_type == "found" ? "Finder : " : "Reporter : " }}
-                        {{ props.item.user.name }}
-                      </p>
-                      <p class="text-xs font-medium leading-none mb-4">
-                        <span>Category : </span> {{ props.item.category.name }}
-                      </p>
-                      <p class="text-xs font-medium leading-none mb-4">
-                        <span>Location : </span> {{ props.item.village.name }}
-                      </p>
-                      <div class="flex items-center justify-between space-x-2">
-                        <Label for="is-approved">Approved ?</Label>
-                        <span> {{ props.item.is_approved ? 'Yes' : 'No' }}</span>
-                      </div>
+          <div class="grid gap-4 py-4 overflow-y-auto px-6">
+            <Card>
+              <CardContent class="flex flex-col justify-between gap-4">
+                <ContextMenu>
+                  <ContextMenuTrigger>
+                    <div class="overflow-hidden rounded-md">
+                      <img :src="props.item.item_images[0]['image_url']" :alt="props.item.title" :width="width"
+                        :height="height" :class="cn(
+                          'h-auto w-auto object-cover transition-all hover:scale-105',
+                          aspectRatio === 'portrait' ? 'aspect-[3/4]' : 'aspect-square'
+                        )
+                          " />
                     </div>
-            </ContextMenuContent>
-          </ContextMenu>
-          <!-- </CardContent> -->
-          <!-- </Card> -->
+                  </ContextMenuTrigger>
+                  <ContextMenuContent>
+                    <div class="flex flex items-center space-x-2">
+                      <Button variant="outline" class="w-full" @click="isOpen = true">
+                        <EyeOff class="h-4 w-4" /> Hide Sensitive info
+                      </Button>
+                    </div>
+                  </ContextMenuContent>
+                </ContextMenu>
+                <CardDescription>
+                  <div class="space-y-1 mt-3 text-sm">
+                    <div class="flex flex-cols-2 justify-between items-center mb-4">
+                      <h3 class="font-medium leading-none">
+                        {{ props.item.title }}
+                      </h3>
+                      <Badge :variant="props.item.post_type === 'found' ? 'outline' : 'destructive'">
+                        <span class="font-medium leading-none">
+                          {{ props.item.post_type }}
+                        </span>
+                      </Badge>
+                    </div>
+                    <p class="text-xs font-medium leading-none mb-4">
+                      {{ item.post_type == "found" ? "Finder : " : "Reporter : " }}
+                      {{ props.item.user.name }}
+                    </p>
+                    <p class="text-xs font-medium leading-none mb-4">
+                      <span>Category : </span> {{ props.item.category.name }}
+                    </p>
+                    <p class="text-xs font-medium leading-none mb-4">
+                      <span>Location : </span> {{ props.item.village.name }}
+                    </p>
+                    <div class="flex items-center justify-between space-x-2">
+                      <Label for="is-approved">Approved ?</Label>
+                      <span> {{ props.item.is_approved ? 'Yes' : 'No' }}</span>
+                    </div>
+                  </div>
+                </CardDescription>
+              </CardContent>
+            </Card>
 
-          <!-- <form id="dialogForm" @submit.prevent>
+            <!-- <form id="dialogForm" @submit.prevent>
                 <FormField v-slot="{ componentField }" name="username">
                   <FormItem>
                     <FormLabel>Username</FormLabel>
@@ -191,7 +197,7 @@ const props = withDefaults(defineProps<CardItemsList>(), {
                   </FormItem>
                 </FormField>
               </form> -->
-          <!-- </div> -->
+          </div>
 
           <DialogFooter class="p-6 pt-0">
             <DialogClose as-child>

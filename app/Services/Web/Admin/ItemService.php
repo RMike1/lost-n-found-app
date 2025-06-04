@@ -21,4 +21,8 @@ class ItemService
             $items,
         ];
     }
+    public function getItemDetails($item): Item
+    {
+        return $item->load(['category', 'user', 'village','cell','sector','district', 'itemImages' => fn ($query) => $query->select('url', 'item_id')]);
+    }
 }
