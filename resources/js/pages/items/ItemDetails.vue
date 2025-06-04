@@ -3,7 +3,7 @@ import { Head, Link } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { ArrowLeft } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
-// import { formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow } from 'date-fns'
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter } from '@/components/ui/card'
 import { type BreadcrumbItem } from '@/types';
@@ -35,6 +35,7 @@ interface Props {
         is_approved: boolean;
         is_resolved: string;
         description: string;
+        created_at: string;
     };
     previousUrl?: string;
 }
@@ -44,7 +45,7 @@ const props = defineProps<Props>();
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Items',
-        href: props.previousUrl || '/items',
+        href: '/items',
     },
     {
         title: props.item.title,
@@ -114,11 +115,11 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 </div>
                                 <div class="flex justify-between">
                                     <dt class="font-medium text-muted-foreground">Posted At</dt>
-                                    <dd>{{ (new Date(item.created_at).toLocaleString()) }}</dd>
+                                    <dd> {{ formatDistanceToNow(new Date(item.created_at), { addSuffix: true }) }}</dd>
                                 </div>
                                 <div class="grid grid-full gap-4">
                                     <div>
-                                        <dt class="font-medium text-muted-foreground mb-2">Description:</dt>
+                                        <dt class="font-medium text-muted-foreground mb-2">Description</dt>
                                         <dd>{{ item.description }}</dd>
                                     </div>
                                 </div>
