@@ -3,10 +3,12 @@ import { Head, Link } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { ArrowLeft } from 'lucide-vue-next';
 import { Button } from '@/components/ui/button';
-import { formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow } from 'date-fns';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardFooter } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardFooter } from '@/components/ui/card';
 import { type BreadcrumbItem } from '@/types';
+import VueMagnifier from '@websitebeaver/vue-magnifier';
+import '@websitebeaver/vue-magnifier/styles.css';
 
 interface Props {
     item: {
@@ -65,26 +67,30 @@ const breadcrumbs: BreadcrumbItem[] = [
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
 
-        <Head :title="item.title" />
+        <Head :title="item.title" />    
 
         <div class="container mx-auto px-4 py-6 w-3/5">
             <Card>
+                <Link :href="route('items.all')" class="inline-flex mb-6">
+                <Button variant="ghost" class="gap-2">
+                    <ArrowLeft class="h-4 w-4" />
+                    Back
+                </Button>
+                </Link>
+                <CardHeader class="items-center justify-center">
+                    <h1 class="text-3xl font-bold">{{ item.title }}</h1>
+                </CardHeader>
                 <CardContent>
-                    <Link :href="route('items.all')" class="inline-flex mb-6">
-                    <Button variant="ghost" class="gap-2">
-                        <ArrowLeft class="h-4 w-4" />
-                        Back
-                    </Button>
-                    </Link>
                     <div class="flex gap-8">
                         <div class="w-1/4">
-                            <img v-for="itemImage in item.item_images" :key="itemImage.id" :src="itemImage.image_url"
-                                :alt="itemImage.title" class="rounded-lg object-cover mb-4" />
+                            <VueMagnifier v-for="itemImage in item.item_images" :key="itemImage.id"
+                                :src="itemImage.image_url" :alt="itemImage.title" class="rounded-lg object-cover mb-4"
+                                width=100% />
                         </div>
 
                         <div class="w-3/4">
                             <div class="flex items-start justify-between">
-                                <h1 class="text-3xl font-bold">{{ item.title }}</h1>
+                                <dt class="font-medium text-muted-foreground">Status</dt>
                                 <Badge :variant="item.post_type === 'found' ? 'outline' : 'destructive'">
                                     {{ item.post_type }}
                                 </Badge>
@@ -103,7 +109,8 @@ const breadcrumbs: BreadcrumbItem[] = [
                                 </div>
                                 <div class="flex justify-between">
                                     <dt class="font-medium text-muted-foreground">Location</dt>
-                                    <dd>{{ item.district.name }}, {{ item.sector.name }}, {{ item.cell.name }},{{ item.village.name }}</dd>
+                                    <dd>{{ item.district.name }}, {{ item.sector.name }}, {{ item.cell.name }},{{
+                                        item.village.name }}</dd>
                                 </div>
                                 <div class="flex justify-between">
                                     <dt class="font-medium text-muted-foreground">Approval</dt>
