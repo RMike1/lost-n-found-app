@@ -131,10 +131,7 @@ const props = withDefaults(defineProps<CardItemsList>(), {
 
         <DialogContent class="sm:max-w-[1200px] grid-rows-[auto_minmax(0,1fr)_auto] p-0 max-h-[90dvh]">
           <DialogHeader class="p-6 pb-0">
-            <DialogTitle>Review</DialogTitle>
-            <DialogDescription>
-              ipsum dolor sit amet consectetur adipisicing elit. Quasi, cumque. Lorem ipsum dolor sit amet consectetur
-            </DialogDescription>
+            <DialogTitle>{{ props.item.title }}</DialogTitle>
           </DialogHeader>
           <div class="grid gap-4 py-4 overflow-y-auto px-6">
             <Card>
