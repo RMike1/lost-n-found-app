@@ -112,14 +112,20 @@ const props = withDefaults(defineProps<CardItemsList>(), {
                 </div>
               </div>
             </CardDescription>
+             <DialogTrigger as-child>
+              <Button variant="ghost">
+                Quick Review
+                <EyeOff class="h-4 w-4" />
+              </Button>
+            </DialogTrigger>
           </CardContent>
           <CardFooter>
-              <Link :href="route('item.show',props.item.id)" class="w-full">
-              <Button class="w-full flex items-center justify-center gap-2">
-                View Details
-                <View class="h-4 w-4" />
-              </Button>
-              </Link>
+            <Link :href="route('item.show', props.item.id)" class="w-full">
+            <Button class="w-full flex items-center justify-center gap-2">
+              View Details
+              <View class="h-4 w-4" />
+            </Button>
+            </Link>
           </CardFooter>
         </Card>
 
