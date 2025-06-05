@@ -72,13 +72,13 @@ const breadcrumbs: BreadcrumbItem[] = [
         <div class="container mx-auto px-4 py-6 w-3/5">
             <Card>
                 <Link :href="route('items.all')" class="inline-flex mb-6">
-                <Button variant="ghost" class="gap-2">
+                <Button variant="ghost" class="gap-2 ml-4">
                     <ArrowLeft class="h-4 w-4" />
                     Back
                 </Button>
                 </Link>
                 <CardHeader class="items-center justify-center">
-                    <h1 class="text-3xl font-bold">{{ item.title }}</h1>
+                    <h1 class="text-3xl font-bold rounded-md border p-4">{{ item.title }}</h1>
                 </CardHeader>
                 <CardContent>
                     <div class="flex gap-8">
@@ -89,7 +89,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                         </div>
 
                         <div class="w-3/4">
-                            <div class="flex items-start justify-between">
+                            <div class="flex items-start justify-between mb-4">
                                 <dt class="font-medium text-muted-foreground">Status</dt>
                                 <Badge :variant="item.post_type === 'found' ? 'outline' : 'destructive'">
                                     {{ item.post_type }}
